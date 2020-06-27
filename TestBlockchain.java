@@ -45,8 +45,7 @@ public class TestBlockchain {
 		BigInteger privateKey = new BigInteger("7230963958846794419");
 		BigInteger nNumber = new BigInteger("13256767265197684783");
 		
-		System.out.println("pub: "+publicKey);
-		System.out.println("pri: "+privateKey);
+		System.out.println("pubicKey: "+publicKey);
 		System.out.println("n: "+nNumber);
 		
 		BigInteger encrypInt = testInt.modPow(publicKey, nNumber);
@@ -55,7 +54,50 @@ public class TestBlockchain {
 			System.out.println("Transaction is valid !");
 		}
 		
+		/*
+		 * Mining Demo
+		 * Mining A block that mean compute valid hash.
+		 * 
+		 */
+		List<Transaction> frozenTransactions = new ArrayList<Transaction>();
+		frozenTransactions.add(new Transaction("node A","node B",300,"11"));
+		frozenTransactions.add(new Transaction("node B","node A",230,"7"));
 		
+		Block tempBlock = new Block("0x200", new java.util.Date(),frozenTransactions);
+		long start = System.nanoTime();
+		String hashResult = MiningBlock(tempBlock,tcpCoin.getChain());
+		while(isExistHash(hashResult,tcpCoin.getChain())) {
+			MiningBlock(tempBlock,tcpCoin.getChain());
+		}
+		long end = System.nanoTime()-start;
+		System.out.println();
+		System.out.println("Compute Hash Successfull !");
+		System.out.println("Computed Hash: "+tempBlock.getHash());
+		System.out.println("Total Time: "+end+" nano seconds");
+		tcpCoin.addBlock(tempBlock,tempBlock.getHash());
+		frozenTransactions.removeAll(frozenTransactions);
+		System.out.println();
+		System.out.println("The new BlockChain is:");
+		System.out.println();
+		tcpCoin.displayChain();
+		
+	}
+	
+	public static String MiningBlock(Block tempBlock,List<Block> currentBlocks) {
+		String rs_hash = tempBlock.getHash();
+		while(!rs_hash.substring(0,3).equalsIgnoreCase("HUY")) {
+			tempBlock.setIncrement_number(tempBlock.getIncrement_number()+1);
+			rs_hash=tempBlock.computeHash();
+		}
+		return rs_hash;
+	}
+	public static Boolean isExistHash(String hash,List<Block> currentBlocks) {
+		for (Block block : currentBlocks) {
+			if(block.getHash().equals(hash)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }

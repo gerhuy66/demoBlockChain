@@ -12,6 +12,7 @@ public class Block {
 	private String hash;
 	private String previousHash;
 	private List<Transaction> datalist;
+	private Integer increment_number=0;
 	
 	public Block(String version, Date timestamp, List<Transaction> datalist) {
 		this.version = version;
@@ -19,10 +20,26 @@ public class Block {
 		this.datalist = datalist;
 		this.hash = computeHash();
 	}
-	
-	public String computeHash() {
-		
-		String dataToHash = "" + this.version + this.Timestamp + this.previousHash;
+	public Block(String version, Date timestamp, List<Transaction> datalist,String hash) {
+		this.version = version;
+		this.Timestamp = timestamp;
+		this.datalist = datalist;
+		this.hash = hash;
+	}
+	public Integer getIncrement_number() {
+		return increment_number;
+	}
+	public void setIncrement_number(Integer increment_number) {
+		this.increment_number = increment_number;
+	}
+	public String computeHash() throws NullPointerException{
+		String inNum ="";
+		try {
+			inNum = this.getIncrement_number().toString();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		String dataToHash = "" + this.version + this.Timestamp + this.previousHash+inNum;
 		
 		MessageDigest digest;
 		String encoded = null;
