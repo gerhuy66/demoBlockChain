@@ -45,13 +45,8 @@ public class Blockchain {
 
 		for (int i = 0; i < chain.size(); i++) {
 			if (i > 0) {
-				System.out.println("					  **");
-				System.out.println("					 ****");
-				System.out.println("					******");
-				System.out.println("					  **");
-				System.out.println("					  **");
-				System.out.println("					  **");
-				System.out.println("					  **");
+				System.out.println("------------------------");
+				System.out.println("************************");
 			}
 			System.out.println("Block: " + i);
 			System.out.println("Version: " + chain.get(i).getVersion());

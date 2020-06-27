@@ -1,5 +1,7 @@
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class TestBlockchain {
@@ -63,17 +65,23 @@ public class TestBlockchain {
 		frozenTransactions.add(new Transaction("node A","node B",300,"11"));
 		frozenTransactions.add(new Transaction("node B","node A",230,"7"));
 		
-		Block tempBlock = new Block("0x200", new java.util.Date(),frozenTransactions);
+		List<Transaction> dataList = new ArrayList<Transaction>();
+		dataList.add(null);
+		dataList.add(null);
+		Collections.copy(dataList, frozenTransactions); ;
+		Block tempBlock = new Block("0x200", new java.util.Date(),dataList);
 		long start = System.nanoTime();
 		String hashResult = MiningBlock(tempBlock,tcpCoin.getChain());
 		while(isExistHash(hashResult,tcpCoin.getChain())) {
-			MiningBlock(tempBlock,tcpCoin.getChain());
+			hashResult=MiningBlock(tempBlock,tcpCoin.getChain());
 		}
+		
 		long end = System.nanoTime()-start;
 		System.out.println();
 		System.out.println("Compute Hash Successfull !");
 		System.out.println("Computed Hash: "+tempBlock.getHash());
 		System.out.println("Total Time: "+end+" nano seconds");
+		tempBlock.setHash(hashResult);
 		tcpCoin.addBlock(tempBlock,tempBlock.getHash());
 		frozenTransactions.removeAll(frozenTransactions);
 		System.out.println();
